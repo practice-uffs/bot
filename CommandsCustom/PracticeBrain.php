@@ -50,18 +50,18 @@ class PracticerBrain
         $issue = $this->gh->api('issue')->show('practice-uffs', 'programa', 300);
     
         $message = sprintf(
-            '__%s/#%d__ - %s' . "\n" .
-            '**%s**' . "\n" .
-            '**Labels:** %s' . "\n" .
-            '**Quem criou:** %s' . "\n" .
-            '**Responsáveis:** %s' . "\n" .
-            '**%s** (%s)' . "\n" .
+            '***%s/#%d*** | %s' . "\n" .
+            '***%s***' . "\n\n" .
+            '***Labels:*** %s' . "\n" .
+            '***Quem criou:*** %s' . "\n" .
+            '***Responsáveis:*** %s' . "\n" .
+            '***%s*** (%s)' . "\n" .
             "\n" .
             '%s',
 
             basename($issue['repository_url']),
             $issue['number'],
-            $issue['state'] == 'closed' ? '~~' . $issue['state'] .'~~' : $issue['state'],
+            ctype_upper($issue['state']),
             $issue['title'],
             implode(', ', $this->mapping($issue['labels'], 'name')),
             $issue['user']['login'],

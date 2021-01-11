@@ -24,6 +24,8 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
+require_once __DIR__ . '/PracticeBrain.php';
+
 class GenericmessageCommand extends SystemCommand
 {
     /**
@@ -48,10 +50,7 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        $message = $this->getMessage();
-        $user_id = $message->getFrom()->getId();
-        $command = $message->getCommand();
-
-        return $this->replyToChat("text not found.. :(");
+        $brain = new \PracticerBrain();   
+        $brain->run($this);
     }
 }

@@ -17,9 +17,50 @@ class PracticerBrain
     protected SystemCommand $sys;
     protected $message;
     protected $sender;
+    protected $gh;
 
     public function __construct()
     {
+        $guzz_client = new \GuzzleHttp\Client([
+            \GuzzleHttp\RequestOptions::VERIFY => \Composer\CaBundle\CaBundle::getSystemCaRootBundlePath()
+        ]);
+        
+        $this->gh = \Github\Client::createWithHttpClient($guzz_client);
+    }
+
+    protected function mapping($arr, $key)
+    {
+        $ret = [];
+    
+        if(!isset($arr)) {
+            return $ret;
+        }
+    
+        foreach($arr as $entry) {
+            if(isset($entry[$key])) {
+                $ret[] = $entry[$key];
+            }
+        }
+    
+        return $ret;
+    }
+    
+    protected function getIssueAsString($org, $repo, $number)
+    {
+        $issue = $this->gh->api('issue')->show('practice-uffs', 'programa', 300);
+    
+        $message =  '***' . basename($issue['repository_url']) . '#' . $issue['number'] . '***: ' . 
+                    '__' . $issue['title'] . '__' . "\n" .
+                    //substr($issue['body'], 0, 200) . '...' . "\n" .
+                    'Labels: ' . implode(', ', $this->mapping($issue['labels'], 'name')) . "\n" .
+                    'Quem criou: ' . $issue['user']['login'] . "\n" .
+                    'Responsáveis: ' . implode(', ', $this->mapping($issue['assignees'], 'login')) . "\n" .
+                    'Status: ' . $issue['state'] . "\n" .
+                    $issue['milestone']['title'] . ' (' . (new DateTime($issue['milestone']['due_on']))->format('Y-m-d H:i:s') . ')' . "\n" .
+                    "\n" .
+                    $issue['url'];
+
+        return $message;
     }
 
     protected function giveIssueInfo()
@@ -27,7 +68,7 @@ class PracticerBrain
         $message_type = $this->message->getType();
 
         if($message_type == 'text') {
-            return $this->sys->replyToChat("new text not found.. :(");
+            return $this->sys->replyToChat($this->getIssueAsString('practice-uffs', 'programa', 300));
         }
 
         return null;

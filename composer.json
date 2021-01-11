@@ -17,7 +17,11 @@
         }
     ],
     "require": {
-        "longman/telegram-bot": "*"
+        "longman/telegram-bot": "*",
+        "knplabs/github-api": "3.0",
+        "guzzlehttp/guzzle": "7.0.1",
+        "http-interop/http-factory-guzzle": "1.0",
+        "composer/ca-bundle": "^1.2"
     },
     "require-dev": {
         "php-parallel-lint/php-parallel-lint": "^1.2",

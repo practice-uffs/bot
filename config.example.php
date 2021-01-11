@@ -44,7 +44,7 @@ return [
     'commands'     => [
         // Define all paths for your custom commands
         'paths'   => [
-            // __DIR__ . '/Commands',
+            // __DIR__ . '/telegram/Commands',
         ],
         // Here you can set any command-specific parameters
         'configs' => [
@@ -79,8 +79,8 @@ return [
 
     // Set custom Upload and Download paths
     'paths'        => [
-        'download' => __DIR__ . '/Download',
-        'upload'   => __DIR__ . '/Upload',
+        'download' => __DIR__ . '/telegram/Download',
+        'upload'   => __DIR__ . '/telegram/Upload',
     ],
 
     // Requests Limiter (tries to prevent reaching Telegram API limits)

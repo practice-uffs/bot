@@ -47,7 +47,7 @@ class PracticerBrain
     
     protected function getIssueAsString($org, $repo, $number)
     {
-        $issue = $this->gh->api('issue')->show('practice-uffs', 'programa', 300);
+        $issue = $this->gh->api('issue')->show($org, $repo, $number);
     
         $message = sprintf(
             '📃***%s/#%d*** | %s' . "\n" .

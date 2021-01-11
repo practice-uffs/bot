@@ -50,7 +50,7 @@ class PracticerBrain
         $issue = $this->gh->api('issue')->show($org, $repo, $number);
     
         $message = sprintf(
-            '📃***%s/#%d*** | %s' . "\n" .
+            '📃***%s/#%d*** %s' . "\n\n" .
             '***%s***' . "\n\n" .
             '🔖 `%s`' . "\n\n" .
             '🤗 ***Quem criou:*** %s' . "\n" .
@@ -61,7 +61,7 @@ class PracticerBrain
 
             basename($issue['repository_url']),
             $issue['number'],
-            $issue['state'],
+            ($issue['state'] == 'closed' ? '🟢' : '🔴') . ' ' . $issue['state'],
             $issue['title'],
             implode(', ', $this->mapping($issue['labels'], 'name')),
             $issue['user']['login'],

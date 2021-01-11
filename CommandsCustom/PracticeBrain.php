@@ -85,7 +85,10 @@ class PracticerBrain
 
         $repo = $repo == '' ? 'programa' : $repo;
 
-        return $this->sys->replyToChat($this->getIssueAsString('practice-uffs', $repo, $number));
+        return $this->sys->replyToChat(
+            $this->getIssueAsString('practice-uffs', $repo, $number),
+            ['parse_mode' => 'markdown']
+        );
     }
 
     protected function handleCommand()

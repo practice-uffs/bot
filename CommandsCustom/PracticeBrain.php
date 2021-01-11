@@ -65,13 +65,27 @@ class PracticerBrain
 
     protected function giveIssueInfo()
     {
+        $re = '/([A-Za-z-_0-9]+)?#([0-9]+)/m';
+        $matches = [];
         $message_type = $this->message->getType();
 
-        if($message_type == 'text') {
-            return $this->sys->replyToChat($this->getIssueAsString('practice-uffs', 'programa', 300));
+        if($message_type != 'text') {
+            return null;
         }
 
-        return null;
+        preg_match_all($re, $this->message->getText(), $matches, PREG_SET_ORDER, 0);
+        $has_issue_mention = count($matches) > 0;
+        
+        if(!$has_issue_mention) {
+            return null;
+        }
+
+        $repo = $matches[0][1];
+        $number = $matches[0][2];
+
+        $repo = $repo == '' ? 'programa' : $repo;
+
+        return $this->sys->replyToChat($this->getIssueAsString('practice-uffs', $repo, $number));
     }
 
     protected function handleCommand()

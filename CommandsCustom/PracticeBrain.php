@@ -52,10 +52,10 @@ class PracticerBrain
         $message = sprintf(
             '📃***%s/#%d*** | %s' . "\n" .
             '***%s***' . "\n\n" .
-            '🔖***Labels:*** %s' . "\n" .
-            '🤗***Quem criou:*** %s' . "\n" .
-            '🧐***Responsáveis:*** %s' . "\n" .
-            '📅***%s*** (%s)' . "\n" .
+            '🔖 `%s`' . "\n\n" .
+            '🤗 ***Quem criou:*** %s' . "\n" .
+            '🧐 ***Responsáveis:*** %s' . "\n" .
+            '📅 ***%s*** (%s)' . "\n" .
             "\n" .
             '%s',
 

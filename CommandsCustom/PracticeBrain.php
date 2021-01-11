@@ -49,16 +49,27 @@ class PracticerBrain
     {
         $issue = $this->gh->api('issue')->show('practice-uffs', 'programa', 300);
     
-        $message =  '***' . basename($issue['repository_url']) . '#' . $issue['number'] . '***: ' . 
-                    '__' . $issue['title'] . '__' . "\n" .
-                    //substr($issue['body'], 0, 200) . '...' . "\n" .
-                    'Labels: ' . implode(', ', $this->mapping($issue['labels'], 'name')) . "\n" .
-                    'Quem criou: ' . $issue['user']['login'] . "\n" .
-                    'Responsáveis: ' . implode(', ', $this->mapping($issue['assignees'], 'login')) . "\n" .
-                    'Status: ' . $issue['state'] . "\n" .
-                    $issue['milestone']['title'] . ' (' . (new DateTime($issue['milestone']['due_on']))->format('Y-m-d H:i:s') . ')' . "\n" .
-                    "\n" .
-                    $issue['url'];
+        $message = sprintf(
+            '__%s/#%d__ - %s' . "\n" .
+            '**%s**' . "\n" .
+            '**Labels:** %s' . "\n" .
+            '**Quem criou:** %s' . "\n" .
+            '**Responsáveis:** %s' . "\n" .
+            '**%s** (%s)' . "\n" .
+            "\n" .
+            '%s',
+
+            basename($issue['repository_url']),
+            $issue['number'],
+            $issue['state'] == 'closed' ? '~~' . $issue['state'] .'~~' : $issue['state'],
+            $issue['title'],
+            implode(', ', mapping($issue['labels'], 'name')),
+            $issue['user']['login'],
+            implode(', ', mapping($issue['assignees'], 'login')),
+            $issue['milestone']['title'],
+            (new DateTime($issue['milestone']['due_on']))->format('Y-m-d H:i:s'),
+            $issue['html_url']
+        );
 
         return $message;
     }

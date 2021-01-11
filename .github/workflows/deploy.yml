@@ -16,6 +16,7 @@ jobs:
         username: ${{ secrets.PROD_USERNAME }}
         password: ${{ secrets.PROD_PASSWORD }}
         script: |
+          source ~/.bash_profile
           cd ${{ env.PROD_WEB_DIRECTORY }}
           git reset --hard
           git pull

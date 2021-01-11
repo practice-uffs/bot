@@ -63,9 +63,9 @@ class PracticerBrain
             $issue['number'],
             $issue['state'] == 'closed' ? '~~' . $issue['state'] .'~~' : $issue['state'],
             $issue['title'],
-            implode(', ', mapping($issue['labels'], 'name')),
+            implode(', ', $this->mapping($issue['labels'], 'name')),
             $issue['user']['login'],
-            implode(', ', mapping($issue['assignees'], 'login')),
+            implode(', ', $this->mapping($issue['assignees'], 'login')),
             $issue['milestone']['title'],
             (new DateTime($issue['milestone']['due_on']))->format('Y-m-d H:i:s'),
             $issue['html_url']

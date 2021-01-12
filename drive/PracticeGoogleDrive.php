@@ -17,10 +17,12 @@ class PracticeGoogleDrive
         return $this->service;
     }
 
-    public function findFoldersWhoseNameContains($string)
+    public function findFoldersWhoseNameContains($string, $parent_id = '')
     {
+        $parentQuery = $parent_id != '' ? "and '$parent_id' in parents" : '';
+
         $optParams = array(
-            'q' => "mimeType='application/vnd.google-apps.folder' and name contains '$string'",
+            'q' => "mimeType='application/vnd.google-apps.folder' and name contains '$string' " . $parentQuery,
             'pageSize' => 10,
             'fields' => 'nextPageToken, files(id, name, webViewLink)'
         );
@@ -46,6 +48,30 @@ class PracticeGoogleDrive
         return $folders[0];
     }
 
+    /**
+     * @param {string} $name name formatted as 'repo#issue_number', ex.: 'programa#222'.
+     * @return {array} array in the format ['folder' => issue_folder_obj, 'in' => folder_obj, 'out' => folder_obj], null if nothing is found.
+     */
+    public function getIssueWorkingFolderStructureByName($name)
+    {
+        $folder = $this->getIssueWorkingFolderByName($name);
+
+        if($folder == null) {
+            return null;
+        }
+
+        $ins = $this->findFoldersWhoseNameContains('Entrada', $folder->getId());
+        $outs = $this->findFoldersWhoseNameContains('Saída', $folder->getId());
+
+        $ret = [
+            'folder' => $folder,
+            'in'     => count($ins) > 0 ? $ins[0] : null,
+            'out'    => count($outs) > 0 ? $outs[0] : null,
+        ];
+
+        return $ret;
+    }
+
     public function config($key, $defaulValue = null)
     {
         if(!is_array($this->config) || !isset($this->config['google_drive'])) {
@@ -69,11 +95,20 @@ class PracticeGoogleDrive
         $folder = $this->getIssueWorkingFolderByName($name);
 
         if($folder != null) {
-            return $folder;
+            return ['folder' => $folder, 'in' => null, 'out' => null];
         }
 
         $tasks_folder_id = $this->config('tasks_folder_id', '');
         $folder = $this->createFolder($name, $tasks_folder_id);
+
+        $in_folder = $this->createFolder('Entrada', $folder->getId());
+        $out_folder = $this->createFolder('Saída', $folder->getId());
+
+        return [
+            'folder' => $folder,
+            'in'     => $in_folder,
+            'out'    => $out_folder
+        ];
     }
 
     public function createFolder($name, $parentId = '') {

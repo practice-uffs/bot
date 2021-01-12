@@ -50,7 +50,7 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        $brain = new \PracticerBrain();   
+        $brain = new \PracticeBrain();   
         return $brain->run($this);
     }
 }

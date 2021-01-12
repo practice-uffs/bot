@@ -12,7 +12,7 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
-class PracticerBrain
+class PracticeBrain
 {
     protected SystemCommand $sys;
     protected $message;
@@ -74,7 +74,7 @@ class PracticerBrain
         return $message;
     }
 
-    protected function giveIssueInfo()
+    public function giveIssueInfo()
     {
         $re = '/([A-Za-z-_0-9]+)?#([0-9]+)/m';
         $matches = [];
@@ -86,7 +86,7 @@ class PracticerBrain
 
         preg_match_all($re, $this->message->getText(), $matches, PREG_SET_ORDER, 0);
         $has_issue_mention = count($matches) > 0;
-        
+
         if(!$has_issue_mention) {
             return null;
         }
@@ -110,17 +110,23 @@ class PracticerBrain
 
     public function run(SystemCommand $cmd): ServerResponse
     {
-        $this->sys = $cmd;
-        $this->message = $cmd->getMessage();
-        $this->user = $this->message->getFrom();
+        try {
+            $this->sys = $cmd;
+            $this->message = $cmd->getMessage();
+            $this->user = $this->message->getFrom();
 
-        // Any of the following methods will return a result if they want to
-        // stop the chaining of other methods, otherwise everything wi be checked.
+            // Any of the following methods will return a result if they want to
+            // stop the chaining of other methods, otherwise everything wi be checked.
 
-        if($result = $this->handleCommand()) { return $result; }
-        if($result = $this->giveIssueInfo()) { return $result; }
+            if($result = $this->handleCommand()) { return $result; }
+            if($result = $this->giveIssueInfo()) { return $result; }
 
-        // If we got here, we have no action to reply...
-        return Request::emptyResponse();
+            // If we got here, we have no action to reply...
+            return Request::emptyResponse();
+
+        } catch(\Exception $e) {
+            $cmd->replyToChat($e->getMessage() . "\n" . '`'.$e->getTraceAsString().'`',
+                                ['parse_mode' => 'markdown']);
+        }
     }
 }

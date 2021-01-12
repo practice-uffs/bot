@@ -47,31 +47,36 @@ class PracticeBrain
     
     protected function getIssueAsString($org, $repo, $number)
     {
-        $issue = $this->gh->api('issue')->show($org, $repo, $number);
+        try {
+            $issue = $this->gh->api('issue')->show($org, $repo, $number);
     
-        $message = sprintf(
-            '📃***%s/#%d*** %s' . "\n\n" .
-            '***%s***' . "\n\n" .
-            '🔖 `%s`' . "\n\n" .
-            '🤗 ***Quem criou:*** %s' . "\n" .
-            '🧐 ***Responsáveis:*** %s' . "\n" .
-            '📅 ***%s*** (%s)' . "\n" .
-            "\n" .
-            '%s',
+            $message = sprintf(
+                '📃***%s/#%d*** %s' . "\n\n" .
+                '***%s***' . "\n\n" .
+                '🔖 `%s`' . "\n\n" .
+                '🤗 ***Quem criou:*** %s' . "\n" .
+                '🧐 ***Responsáveis:*** %s' . "\n" .
+                '📅 ***%s*** (%s)' . "\n" .
+                "\n" .
+                '%s',
 
-            basename($issue['repository_url']),
-            $issue['number'],
-            ($issue['state'] == 'closed' ? '🟢' : '🔴') . ' ' . $issue['state'],
-            $issue['title'],
-            implode(', ', $this->mapping($issue['labels'], 'name')),
-            $issue['user']['login'],
-            implode(', ', $this->mapping($issue['assignees'], 'login')),
-            $issue['milestone']['title'],
-            (new DateTime($issue['milestone']['due_on']))->format('Y-m-d H:i:s'),
-            $issue['html_url']
-        );
+                basename($issue['repository_url']),
+                $issue['number'],
+                ($issue['state'] == 'closed' ? '🟢' : '🔴') . ' ' . $issue['state'],
+                $issue['title'],
+                implode(', ', $this->mapping($issue['labels'], 'name')),
+                $issue['user']['login'],
+                implode(', ', $this->mapping($issue['assignees'], 'login')),
+                $issue['milestone']['title'],
+                (new DateTime($issue['milestone']['due_on']))->format('Y-m-d H:i:s'),
+                $issue['html_url']
+            );
 
-        return $message;
+            return $message;
+
+        } catch(\Exception $e) {
+            return sprintf('🤖💔 Não consegui obter info de %s/%s/%s. #tisti', $org, $repo, $number);
+        }
     }
 
     public function giveIssueInfo()

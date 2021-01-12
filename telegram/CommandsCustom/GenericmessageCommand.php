@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/PracticeTelegram.php';
-
 /**
  * This file is part of the PHP Telegram Bot example-bot package.
  * https://github.com/php-telegram-bot/example-bot/
@@ -12,6 +10,13 @@ require_once __DIR__ . '/PracticeTelegram.php';
  * file that was distributed with this source code.
  */
 
+namespace Longman\TelegramBot\Commands\SystemCommands;
+
+require_once __DIR__ . '/PracticeTelegram.php';
+
+use Longman\TelegramBot\Commands\SystemCommand;
+use Longman\TelegramBot\Entities\ServerResponse;
+
 /**
  * Generic message command
  *
@@ -19,12 +24,6 @@ require_once __DIR__ . '/PracticeTelegram.php';
  *
  * In this service-message-related context, we can handle any incoming service-messages.
  */
-
-namespace Longman\TelegramBot\Commands\SystemCommands;
-
-use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Entities\ServerResponse;
-
 class GenericmessageCommand extends SystemCommand
 {
     /**

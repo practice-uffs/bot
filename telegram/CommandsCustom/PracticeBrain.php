@@ -75,7 +75,7 @@ class PracticeBrain
             return $message;
 
         } catch(\Exception $e) {
-            return sprintf('🤖💔 Não consegui obter info de %s/%s/%s. #tisti', $org, $repo, $number);
+            return sprintf('🤖💔 Não consegui infos de https://github.com/%s/%s/issues/%s #tisti', $org, $repo, $number);
         }
     }
 

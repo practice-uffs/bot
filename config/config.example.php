@@ -57,6 +57,10 @@ return [
         ],
     ],
 
+    'google_drive' => [
+        'tasks_folder_id' => '' // id da pasta "Tarefas" usada pela equipe no Google Drive
+    ],
+
     // Define all IDs of admin users
     'admins'       => [
         // 123,

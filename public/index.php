@@ -22,7 +22,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 // Load all configuration options
 /** @var array $config */
-$config = require __DIR__ . '/../config.php';
+$config = require __DIR__ . '/../config/config.php';
 
 try {
     // Create Telegram API object

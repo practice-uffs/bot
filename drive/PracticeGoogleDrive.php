@@ -5,8 +5,9 @@ class PracticeGoogleDrive
     protected Google_Client $client;
     protected Google_Service_Drive $service;
 
-    public function __construct()
+    public function __construct(array $config = [])
     {
+        $this->config = $config;
         $this->client = $this->getGoogleClient();
         $this->service = new Google_Service_Drive($this->client);        
     }
@@ -14,6 +15,79 @@ class PracticeGoogleDrive
     public function getService(): Google_Service_Drive
     {
         return $this->service;
+    }
+
+    public function findFoldersWhoseNameContains($string)
+    {
+        $optParams = array(
+            'q' => "mimeType='application/vnd.google-apps.folder' and name contains '$string'",
+            'pageSize' => 10,
+            'fields' => 'nextPageToken, files(id, name, webViewLink)'
+        );
+
+        $results = $this->service->files->listFiles($optParams);
+        return $results->getFiles();
+    }
+
+    public function findIssueWorkingFolders()
+    {
+        $folders = $this->findFoldersWhoseNameContains('programa#');
+        return $folders;
+    }
+
+    public function getIssueWorkingFolderByName($name)
+    {
+        $folders = $this->findFoldersWhoseNameContains($name);
+
+        if(count($folders) == 0) {
+            return null;
+        }
+
+        return $folders[0];
+    }
+
+    public function config($key, $defaulValue = null)
+    {
+        if(!is_array($this->config) || !isset($this->config['google_drive'])) {
+            return $defaulValue;
+        }
+
+        if(isset($this->config['google_drive'][$key])) {
+            return $this->config['google_drive'][$key];
+        }
+
+        return $defaulValue;
+    }
+
+    public function createIssueWorkingFolder($number, $repo = 'programa')
+    {
+        if(empty($number)) {
+            throw new \InvalidArgumentException('Param $number requires a value.');
+        }
+
+        $name = $repo . '#' . $number;
+        $folder = $this->getIssueWorkingFolderByName($name);
+
+        if($folder != null) {
+            return $folder;
+        }
+
+        $tasks_folder_id = $this->config('tasks_folder_id', '');
+        $folder = $this->createFolder($name, $tasks_folder_id);
+    }
+
+    public function createFolder($name, $parentId = '') {
+        $folderMeta = new Google_Service_Drive_DriveFile();
+
+        $folderMeta->setName($name);
+        $folderMeta->setMimeType('application/vnd.google-apps.folder');
+
+        if(!empty($parentId)) {
+            $folderMeta->parents[] = $parentId;
+        }
+        
+        $folder = $this->service->files->create($folderMeta);
+        return $folder;
     }
 
     /**

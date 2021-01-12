@@ -11,6 +11,8 @@ try {
     $handler = new Handler($config['github']['webhook_secret'], __DIR__);
     $github = new PracticeGithub($config);
 
+    $github->logRequest($_REQUEST);
+
     if($handler->validate()) {
         $github->run($handler->getData(), $handler->getDelivery(), $handler->getEvent());
     } else {

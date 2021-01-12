@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/PracticeTelegram.php';
+
 /**
  * This file is part of the PHP Telegram Bot example-bot package.
  * https://github.com/php-telegram-bot/example-bot/
@@ -22,9 +24,6 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Request;
-
-require_once __DIR__ . '/PracticeBrain.php';
 
 class GenericmessageCommand extends SystemCommand
 {
@@ -50,7 +49,7 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute(): ServerResponse
     {
-        $brain = new \PracticeBrain();   
+        $brain = new \PracticeTelegram();   
         return $brain->run($this);
     }
 }

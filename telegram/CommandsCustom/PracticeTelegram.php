@@ -12,7 +12,7 @@ use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
 
-class PracticeBrain
+class PracticeTelegram
 {
     protected SystemCommand $sys;
     protected $message;

@@ -61,6 +61,12 @@ return [
         'tasks_folder_id' => '' // id da pasta "Tarefas" usada pela equipe no Google Drive
     ],
 
+    'github'       => [
+        'webhook_secret' => '', // secret informado no painel de webhook do Github
+        'username'       => '', // nome de usuário que fará as interações como um bot, ex.: 'dovyski'
+        'token'          => ''  // token de acesso do usuário informado acima.
+    ],
+
     // Define all IDs of admin users
     'admins'       => [
         // 123,

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bcca376a8c0e5a23cd8519cc4517273b",
+    "content-hash": "e0701beaa32370ee5bd888dff24a64e8",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -146,6 +146,52 @@
                 }
             ],
             "time": "2020-08-23T12:54:47+00:00"
+        },
+        {
+            "name": "dintel/php-github-webhook",
+            "version": "0.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dintel/php-github-webhook.git",
+                "reference": "e6450ebdbc718b8d5fc6e5a2ae462d350232a0ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dintel/php-github-webhook/zipball/e6450ebdbc718b8d5fc6e5a2ae462d350232a0ce",
+                "reference": "e6450ebdbc718b8d5fc6e5a2ae462d350232a0ce",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GitHubWebhook\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitry Zbarski",
+                    "email": "dmitry.zbarski@gmail.com",
+                    "homepage": "http://zbarski.info",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Simple class for handling GitHub webhook calls",
+            "keywords": [
+                "git",
+                "webhook"
+            ],
+            "support": {
+                "issues": "https://github.com/dintel/php-github-webhook/issues",
+                "source": "https://github.com/dintel/php-github-webhook/tree/master"
+            },
+            "time": "2016-11-20T11:41:31+00:00"
         },
         {
             "name": "firebase/php-jwt",

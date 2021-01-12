@@ -22,7 +22,8 @@
         "guzzlehttp/guzzle": "7.0.1",
         "http-interop/http-factory-guzzle": "1.0",
         "composer/ca-bundle": "^1.2",
-        "google/apiclient": "2.7"
+        "google/apiclient": "2.7",
+        "dintel/php-github-webhook": "^0.2.0"
     },
     "require-dev": {
         "php-parallel-lint/php-parallel-lint": "^1.2",

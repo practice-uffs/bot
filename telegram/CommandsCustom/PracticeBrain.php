@@ -130,7 +130,7 @@ class PracticeBrain
             return Request::emptyResponse();
 
         } catch(\Exception $e) {
-            $cmd->replyToChat($e->getMessage() . "\n" . '`'.$e->getTraceAsString().'`',
+            return $cmd->replyToChat("🤖💀 Deu ruim: " . $e->getMessage() . "\n" . '`'.$e->getTraceAsString().'`',
                                 ['parse_mode' => 'markdown']);
         }
     }

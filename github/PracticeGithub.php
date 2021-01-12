@@ -29,7 +29,7 @@ class PracticeGithub
 
     public function run()
     {
-        $hookSecret = null;//$this->config['github']['webhook_secret']; // null to disable check
+        $hookSecret = $this->config['github']['webhook_secret']; // null to disable check
 
         set_error_handler(function($severity, $message, $file, $line) {
             throw new \ErrorException($message, 0, $severity, $file, $line);

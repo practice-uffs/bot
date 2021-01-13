@@ -9,6 +9,8 @@
  */
 class PracticeGithub
 {
+    protected array $config = [];
+
     public function __construct(array $config = [])
     {
         $this->config = $config;
@@ -22,8 +24,69 @@ class PracticeGithub
         file_put_contents($log_path, print_r($request, true));
     }
 
+    protected function getGithubClient($authenticated = false)
+    {
+        $guzz_client = new \GuzzleHttp\Client([
+            \GuzzleHttp\RequestOptions::VERIFY => \Composer\CaBundle\CaBundle::getSystemCaRootBundlePath()
+        ]);
+        
+        $gh = \Github\Client::createWithHttpClient($guzz_client);
+
+        if($authenticated) {
+            $user = $this->config['github']['username'];
+            $token = $this->config['github']['token'];
+
+            $gh->authenticate($token, null, Github\Client::AUTH_ACCESS_TOKEN);
+        }
+        
+        return $gh;
+    }
+
+    protected function getGoogleDriveClient()
+    {
+        $drive = new PracticeGoogleDrive($this->config);
+        return $drive;
+    }
+
+    protected function handleIssuesEvent($payload)
+    {
+        $org = $payload->organization->login;
+        $repo = $payload->repository->name;
+        $issue = $payload->issue->number;
+
+        switch($payload->action) {
+            case 'opened':
+                $gh = $this->getGithubClient(true);
+                $drive = $this->getGoogleDriveClient();
+
+                $comment = '';
+                $folders = $drive->createIssueWorkingFolder($issue, $repo);
+
+                if($folders != null) {
+                    var_dump($folders);
+                    $drive_link = isset($folders['folder']) ? $folders['folder']->getWebViewLink() : '';
+                    $drive_in_link = isset($folders['in']) ? $folders['in']->getWebViewLink() : '';
+                    $drive_out_link = isset($folders['out']) ? $folders['out']->getWebViewLink() : '';
+
+                    $comment = 
+                        'Criei as pastas dessa issue no Google Drive:' . "\n" .
+                        '* <img width="16" height="16" src="https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" /> [Pasta da issue]('.$drive_link.') ' . "\n" .
+                        '* 🔽 [Entrada]('.$drive_in_link.')' . "\n" .
+                        '* 🔼 [Saída]('.$drive_out_link.')';
+                } else {
+                    $comment = 'Humm, não consegui criar as pastas dessa issue no Google Drive. Desculpe 😥';
+                }
+
+                $gh->api('issue')->comments()->create($org, $repo, $issue, array('body' => $comment));
+                break;
+        }
+    }
+
     protected function handlePayload($event, $payload)
     {
+        if($event == 'issues') {
+            $this->handleIssuesEvent($payload);
+        }
         $this->logRequest($payload);
     }
 
@@ -50,6 +113,7 @@ class PracticeGithub
             }
 
             $rawPost = file_get_contents('php://input');
+
             if (!hash_equals($hash, hash_hmac($algo, $rawPost, $hookSecret))) {
                 throw new \Exception('Hook secret does not match.');
             }

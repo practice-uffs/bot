@@ -31,6 +31,23 @@ class PracticeGoogleDrive
         return $results->getFiles();
     }
 
+    public function getFolderByName($string, $parent_id = '')
+    {
+        $parentQuery = $parent_id != '' ? "and '$parent_id' in parents" : '';
+
+        $optParams = array(
+            'q' => "mimeType='application/vnd.google-apps.folder' and name='$string' " . $parentQuery,
+            'pageSize' => 10,
+            'fields' => 'nextPageToken, files(id, name, webViewLink)'
+        );
+
+        $results = $this->service->files->listFiles($optParams);
+        $files = $results->getFiles();
+        $folder = count($files) > 0 ? $files[0]: null;
+
+        return $folder;
+    }
+
     public function findIssueWorkingFolders()
     {
         $folders = $this->findFoldersWhoseNameContains('programa#');
@@ -39,13 +56,8 @@ class PracticeGoogleDrive
 
     public function getIssueWorkingFolderByName($name)
     {
-        $folders = $this->findFoldersWhoseNameContains($name);
-
-        if(count($folders) == 0) {
-            return null;
-        }
-
-        return $folders[0];
+        $folder = $this->getFolderByName($name);
+        return $folder;
     }
 
     /**
@@ -95,20 +107,16 @@ class PracticeGoogleDrive
         $folder = $this->getIssueWorkingFolderByName($name);
 
         if($folder != null) {
-            return ['folder' => $folder, 'in' => null, 'out' => null];
+            return $this->getIssueWorkingFolderStructureByName($name);
         }
 
         $tasks_folder_id = $this->config('tasks_folder_id', '');
+        
         $folder = $this->createFolder($name, $tasks_folder_id);
-
         $in_folder = $this->createFolder('Entrada', $folder->getId());
         $out_folder = $this->createFolder('Saída', $folder->getId());
 
-        return [
-            'folder' => $folder,
-            'in'     => $in_folder,
-            'out'    => $out_folder
-        ];
+        return $this->getIssueWorkingFolderStructureByName($name);
     }
 
     public function createFolder($name, $parentId = '') {

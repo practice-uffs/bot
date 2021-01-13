@@ -13,6 +13,7 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 require_once __DIR__ . '/PracticeTelegram.php';
+require_once __DIR__ . '/../../app/PracticeBot.php';
 
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;

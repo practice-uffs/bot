@@ -8,6 +8,7 @@
  *
  */
 
+use Longman\TelegramBot\ChatAction;
 use Longman\TelegramBot\Commands\SystemCommand;
 use Longman\TelegramBot\Entities\ServerResponse;
 use Longman\TelegramBot\Request;
@@ -79,32 +80,51 @@ class PracticeTelegram
         }
     }
 
+    /**
+     * Informs the bot is typing
+     *
+     * @return ServerResponse
+     * @throws TelegramException
+     */
+    public function informIsTyping(): ServerResponse
+    {
+        return Request::send(ChatAction::TYPING, [
+            'chat_id' => $this->message->getChat()->getId(),
+        ]);
+    }
+
     public function giveIssueInfo()
     {
-        $re = '/([A-Za-z-_0-9]+)?#([0-9]+)/m';
-        $matches = [];
         $message_type = $this->message->getType();
 
         if($message_type != 'text') {
             return null;
         }
 
-        preg_match_all($re, $this->message->getText(), $matches, PREG_SET_ORDER, 0);
-        $has_issue_mention = count($matches) > 0;
+        $issues = PracticeBot::parseDriveFolderNames($this->message->getText());
+        $total_issues = count($issues);
 
-        if(!$has_issue_mention) {
+        if($total_issues == 0) {
             return null;
         }
 
-        $repo = $matches[0][1];
-        $number = $matches[0][2];
+        $ret = null;
 
-        $repo = $repo == '' ? 'programa' : $repo;
+        for($i = 0; $i < $total_issues; $i++) {
+            if($i == 0 && $total_issues > 1) {
+                $this->informIsTyping();
+            }
 
-        return $this->sys->replyToChat(
-            $this->getIssueAsString('practice-uffs', $repo, $number),
-            ['parse_mode' => 'markdown']
-        );
+            $repo = $issues[$i]['repo'];
+            $number = $issues[$i]['issue'];
+
+            $ret = $this->sys->replyToChat(
+                $this->getIssueAsString('practice-uffs', $repo, $number),
+                ['parse_mode' => 'markdown']
+            );
+        }
+
+        return $ret;
     }
 
     protected function handleCommand()

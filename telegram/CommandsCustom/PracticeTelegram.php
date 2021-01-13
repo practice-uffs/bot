@@ -88,8 +88,11 @@ class PracticeTelegram
      */
     public function informIsTyping(): ServerResponse
     {
-        return Request::send(ChatAction::TYPING, [
-            'chat_id' => $this->message->getChat()->getId(),
+        $chat_id = $this->message->getChat()->getId();
+
+        return Request::sendChatAction([
+            'chat_id' => $chat_id,
+            'action'  => Longman\TelegramBot\ChatAction::TYPING,
         ]);
     }
 
@@ -108,13 +111,10 @@ class PracticeTelegram
             return null;
         }
 
+        $this->informIsTyping();
         $ret = null;
 
         for($i = 0; $i < $total_issues; $i++) {
-            if($i == 0 && $total_issues > 1) {
-                $this->informIsTyping();
-            }
-
             $repo = $issues[$i]['repo'];
             $number = $issues[$i]['issue'];
 

@@ -1,8 +1,8 @@
 name: deploy
 on: push
 env:
-  PROD_HOST: practice-telegram.bot.uffs.cc
-  PROD_WEB_DIRECTORY: /home/ccuffsbotpracticetelegram/practice-telegram.bot.uffs.cc
+  PROD_HOST: practice.bot.uffs.cc
+  PROD_WEB_DIRECTORY: /home/ccuffsbotpractice/practice.bot.uffs.cc
 jobs:
   deploy:
     name: Deploy to production

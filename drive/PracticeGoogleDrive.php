@@ -43,14 +43,15 @@ class PracticeGoogleDrive
 
         $results = $this->service->files->listFiles($optParams);
         $files = $results->getFiles();
+
         $folder = count($files) > 0 ? $files[0]: null;
 
         return $folder;
     }
 
-    public function findIssueWorkingFolders()
+    public function findIssueWorkingFolders($repo = 'programa')
     {
-        $folders = $this->findFoldersWhoseNameContains('programa#');
+        $folders = $this->findFoldersWhoseNameContains($repo . '#');
         return $folders;
     }
 

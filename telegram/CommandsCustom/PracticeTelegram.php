@@ -18,6 +18,8 @@ class PracticeTelegram
     protected SystemCommand $sys;
     protected $message;
     protected $sender;
+    protected $user;
+    protected $chat;
     protected $gh;
 
     public function __construct()
@@ -127,6 +129,24 @@ class PracticeTelegram
         return $ret;
     }
 
+    protected function tellJoke()
+    {
+        $chat_id = $this->message->getChat()->getId();
+        $message_type = $this->message->getType();
+
+        if($message_type != 'text') {
+            return null;
+        }
+
+        $text = $this->message->getText();
+
+        if(stripos($text, 'piada') === false) {
+            return null;
+        }
+
+        return $this->sys->replyToChat("Nah! Diz você uma 😁 ($chat_id)", ['parse_mode' => 'markdown']);
+    }
+
     protected function handleCommand()
     {
         $user_id = $this->message->getFrom()->getId();
@@ -139,12 +159,14 @@ class PracticeTelegram
             $this->sys = $cmd;
             $this->message = $cmd->getMessage();
             $this->user = $this->message->getFrom();
+            $this->chat = $this->message->getChat();
 
             // Any of the following methods will return a result if they want to
             // stop the chaining of other methods, otherwise everything wi be checked.
 
             if($result = $this->handleCommand()) { return $result; }
             if($result = $this->giveIssueInfo()) { return $result; }
+            if($result = $this->tellJoke()) { return $result; }
 
             // If we got here, we have no action to reply...
             return Request::emptyResponse();

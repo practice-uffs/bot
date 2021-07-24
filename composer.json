@@ -19,10 +19,11 @@
     "require": {
         "longman/telegram-bot": "^0.70",
         "knplabs/github-api": "3.0",
-        "guzzlehttp/guzzle": "7.0.1",
+        "guzzlehttp/guzzle": "*",
         "http-interop/http-factory-guzzle": "1.0",
         "composer/ca-bundle": "^1.2",
-        "google/apiclient": "2.7"
+        "google/apiclient": "2.7",
+        "treinetic/imageartist": "^1.0"
     },
     "require-dev": {
         "php-parallel-lint/php-parallel-lint": "^1.2",

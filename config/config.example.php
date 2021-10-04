@@ -67,6 +67,9 @@ return [
         'lideres' => -1001180892973, // id do grupo "Practice @Líderes"
     ],
 
+    // API key allowed to use owr own API
+    'api_password' => '',
+
     'github'       => [
         'webhook_secret' => '', // secret informado no painel de webhook do Github
         'username'       => '', // nome de usuário que fará as interações como um bot, ex.: 'dovyski'

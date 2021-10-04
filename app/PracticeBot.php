@@ -34,4 +34,26 @@ class PracticeBot {
 
         return $result;
     }
+
+    public static function getGoogleDriveSpreadsheetByUrl($url) {
+        $content = file_get_contents($url);
+
+        if ($content === false) {
+            throw new Exception('Não foi possível baixar o arquivo.');
+        }
+
+        // parse $content to transform it from a string CSV to an array
+        $csv = array_map('str_getcsv', explode("\n", $content));
+
+        // remove the first row (header)
+        $header = array_shift($csv);
+
+        $result = [];
+
+        foreach($csv as $row) {
+            $result[] = array_combine($header, $row);
+        }
+
+        return $result;
+    }
 }

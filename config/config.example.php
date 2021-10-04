@@ -58,7 +58,13 @@ return [
     ],
 
     'google_drive' => [
-        'tasks_folder_id' => '' // id da pasta "Tarefas" usada pela equipe no Google Drive
+        'tasks_folder_id' => '', // id da pasta "Tarefas" usada pela equipe no Google Drive
+        'team_spreadsheet_url' => '', // url da planilha de membros no Google Drive
+    ],
+    
+    'chats' => [
+        'todos' => -1001315997119, // id do grupo "Practice @TODOS"
+        'lideres' => -1001180892973, // id do grupo "Practice @Líderes"
     ],
 
     'github'       => [
@@ -69,7 +75,7 @@ return [
 
     // Define all IDs of admin users
     'admins'       => [
-        // 123,
+        1231890240, // Fernando Bevilacqua
     ],
 
     // Enter your MySQL database credentials
